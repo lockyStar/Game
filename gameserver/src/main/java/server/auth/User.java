@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by Alex on 24.10.2016.
  */
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
     @NotNull
     private static final Logger log = LogManager.getLogger(User.class);
