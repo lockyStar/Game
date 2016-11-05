@@ -24,6 +24,9 @@
         <jetty.version>9.3.12.v20160915</jetty.version>
         <jersey.version>2.7</jersey.version>
         <log4j.version>2.6.2</log4j.version>
+        <postgresql.version>9.4-1200-jdbc41</postgresql.version>
+        <hibernate.version>5.2.3.Final</hibernate.version>
+        <jpa.version>2.1.0</jpa.version>
     </properties>
 
     <dependencies>
@@ -102,16 +105,25 @@
             <artifactId>annotations</artifactId>
             <version>13.0</version>
         </dependency>
+
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>13.0</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>13.0</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>javax.persistence</artifactId>
+            <version>${jpa.version}</version>
+        </dependency>
+
 
     </dependencies>
 </project>

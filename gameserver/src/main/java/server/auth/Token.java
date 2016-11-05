@@ -3,21 +3,46 @@ package server.auth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.persistence.*;
+import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by Alex on 24.10.2016.
  */
+@Entity
+@Table(name = "token")
 public class Token {
     private static final Logger log = LogManager.getLogger(Authentication.class);
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
     private Long token;
+
+    @Embedded
+    private Date date;
+
+    @Column(nullable = false)
+    private int userId;
+
     public Token() {
         token = ThreadLocalRandom.current().nextLong();
+        date = new Date();
     }
 
     public Token(Long token){
         this.token = token;
+    }
+
+    public void setDate (Date date){
+        this.date = date;
+    }
+
+    public void setUserId(int id){
+        this.userId = id;
     }
 
     @Override
@@ -49,6 +74,9 @@ public class Token {
         return token;
     }
 
+    public int getUserId() { return userId; }
+
+    public Date getDate () {return  date; }
     @Override
     public String toString() {
         return Long.toString(token);
