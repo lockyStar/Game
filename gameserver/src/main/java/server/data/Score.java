@@ -12,6 +12,7 @@ import javax.persistence.Id;
 /**
  * Created by Alex on 07.11.2016.
  */
+
 public class Score {
     private static final Logger log = LogManager.getLogger(Authentication.class);
 
@@ -45,9 +46,25 @@ public class Score {
         return this;
     }
 
+    /**
+     *
+     * @param score
+     * @return
+     */
     public Score setScore(Long score){
         this.score = score;
         return this;
     }
 
+    public int getUserId(){
+        return this.userId;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
+    public Long getScore(){
+        return this.score;
+    }
 }
