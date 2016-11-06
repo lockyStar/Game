@@ -23,7 +23,8 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Embedded
+    //@Embedded
+    @Column(nullable = false)
     private Date date;
 
     @Column(nullable = false)
