@@ -11,28 +11,28 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by Alex on 24.10.2016.
  */
 @Entity
-@Table(name = "user")
+@Table(name = "userss")
 public class User {
-    //@NotNull
-    //private static final Logger log = LogManager.getLogger(User.class);
+    @NotNull
+    private static final Logger log = LogManager.getLogger(User.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @NotNull
-    @Column(unique = true)
     private String name;
 
-    @Embedded
+    //@Embedded
     private Date date;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true)
+    //@Column(nullable = true)
     private String email;
 
-    @Column(nullable = true)
+    //@Column(nullable = true)
     private int tokenId;
 
     /**
