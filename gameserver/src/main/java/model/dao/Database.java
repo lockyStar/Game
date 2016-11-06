@@ -59,10 +59,24 @@ public class Database {
     }
 
     static <T> void delete(T entity) {
-        Transaction txn = null;
+        Transaction  txn = null;
         try (Session session = Database.openSession()) {
             txn = session.beginTransaction();
             session.delete(entity);
+            txn.commit();
+        } catch (RuntimeException e) {
+            log.error("Transaction failed.", e);
+            if (txn != null && txn.isActive()) {
+                txn.rollback();
+            }
+        }
+    }
+
+    static <T> void update (T entity){
+        Transaction  txn = null;
+        try (Session session = Database.openSession()) {
+            txn = session.beginTransaction();
+            session.update(entity);
             txn.commit();
         } catch (RuntimeException e) {
             log.error("Transaction failed.", e);

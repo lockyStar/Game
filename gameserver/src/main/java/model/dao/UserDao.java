@@ -41,4 +41,8 @@ public class UserDao implements Dao<User> {
         Database.delete(user);
     }
 
+    public void update (User user) {
+        Database.update(user);
+    }
+
 }

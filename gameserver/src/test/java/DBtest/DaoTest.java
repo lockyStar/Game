@@ -53,6 +53,14 @@ public class DaoTest {
         assertEquals(before - 1, userDao.getAll().size());
     }
 
+    @Test
+    public void updateUserTest() throws Exception {
+        User first = userDao.getAll().get(0);
+        first.setName("lololo");
+        userDao.update(first);
+        assertEquals(userDao.getAll().get(0).getName(), first.getName());
+    }
+
 
     @Test
     public void getAllTokensTest() throws Exception {
