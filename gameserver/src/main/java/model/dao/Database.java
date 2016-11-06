@@ -10,6 +10,8 @@ import org.hibernate.cfg.Configuration;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Created by Alex on 06.11.2016.

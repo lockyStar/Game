@@ -13,8 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Entity
 @Table(name = "user")
 public class User {
-    @NotNull
-    private static final Logger log = LogManager.getLogger(User.class);
+    //@NotNull
+    //private static final Logger log = LogManager.getLogger(User.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,6 +33,7 @@ public class User {
     @Column(nullable = true)
     private String email;
 
+    @Column(nullable = true)
     private int tokenId;
 
     /**
@@ -43,9 +44,9 @@ public class User {
     public User(@NotNull String name) {
         this.name = name;
         this.date = new Date();
-        if (log.isInfoEnabled()) {
-            log.info(toString() + " created");
-        }
+       // if (log.isInfoEnabled()) {
+       //     log.info(toString() + " created");
+        //}
     }
 
     public void setName(String newName){
@@ -86,11 +87,11 @@ public class User {
             return false;
         }
         final User other = (User) obj;
-        log.info (name + " vs " + other.getName() );
+        //log.info (name + " vs " + other.getName() );
         if (!this.name.equals(other.getName())) {
             return false;
         }
-        log.info("Correct");
+        //log.info("Correct");
         return true;
     }
 
