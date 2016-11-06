@@ -43,7 +43,7 @@ public class DaoTest {
     }
 
     @Test
-    public void getAllToensTest() throws Exception {
+    public void getAllTokensTest() throws Exception {
         System.out.println(tokenDao.getAll());
     }
 

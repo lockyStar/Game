@@ -16,14 +16,14 @@ public class UserDao implements Dao<User> {
 
     @Override
     public List<User> getAll() {
-        return Database.selectTransactional(session -> session.createQuery("from userss").list());
+        return Database.selectTransactional(session -> session.createQuery("from User").list());
     }
 
 
     @Override
     public List<User> getAllWhere(String ... hqlConditions) {
         String totalCondition = Joiner.on(" and ").join(Arrays.asList(hqlConditions));
-        return Database.selectTransactional(session ->session.createQuery("from userss where " + totalCondition).list());
+        return Database.selectTransactional(session ->session.createQuery("from User where " + totalCondition).list());
     }
 
     /***

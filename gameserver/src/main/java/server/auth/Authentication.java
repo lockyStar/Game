@@ -42,8 +42,9 @@ public class Authentication {
         User newUser = new User(user)
                 .setPassword(password);
 
-        if (TokenContainer.addUser(newUser)) {
-
+        log.info("New temp user created {} ", user);
+        if (!TokenContainer.addUser(newUser)) {
+            log.info("Not Acceptable you ruined registration");
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
 

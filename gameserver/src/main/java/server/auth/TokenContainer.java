@@ -2,6 +2,7 @@ package server.auth;
 
 import model.Player;
 import model.dao.UserDao;
+import model.dao.TokenDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,9 +38,10 @@ public class TokenContainer{
     }
 
     private static UserDao userDao = new UserDao();
+    private static TokenDao tokenDao = new TokenDao();
 
     public static boolean addUser(User user) {
-        /**if (credentials.putIfAbsent(user, password) != null) {
+        /*if (credentials.putIfAbsent(user, password) != null) {
             log.info(user.toString() + "not adding user");
             return true;
         }
@@ -47,24 +49,31 @@ public class TokenContainer{
         players.put(user, new Player(user.getName()));
 
         return false;
-
+        */
         List<User> oldUsers = userDao.getAllWhere("name = '" + user.getName() + "'");
-        if (oldUsers == null) {
-            return false;
+        log.info(" size of oldusers with this name is {} ", oldUsers.size());
+        if (oldUsers.size() == 0) {
+            log.info(" size of oldusers with this name {} is null", user.getName());
+            userDao.insert(user);
+            return true;
         }
-         */
-        userDao.insert(user);
-        return true;
+        return false;
     }
 
     public static User getUserByString (String nick){
-        User temp = null;
+        /*User temp  = new User();
         for (Enumeration<User> e = credentials.keys(); e.hasMoreElements();){
             temp = e.nextElement();
             if (temp.getName().equals(nick)){
                 //log.info("Match");
                 return temp;
             }
+        }
+        return null;
+        */
+        List<User> oldUsers = userDao.getAllWhere("name = '" + nick + "'");
+        if (oldUsers.size() == 1){
+            return oldUsers.get(0);
         }
         return null;
     }
@@ -92,7 +101,7 @@ public class TokenContainer{
 
 
     static Token issueToken(User user) {
-        Token token = tokens.get(user);
+        /*Token token = tokens.get(user);
         log.info("issue token for " + user.getName());
         if (token != null) {
             return token;
@@ -100,18 +109,26 @@ public class TokenContainer{
 
         do {
             token = new Token();
-
-
         } while (tokens.containsKey(token));
+
         tokens.put(user, token);
         tokensReversed.put(token, user);
         return token;
-    }
+        */
+        List<Token> oldTokens = tokenDao.getAllWhere("userId = '" + user.getId() + "'");
+        if (oldTokens.size() == 1){
+            return oldTokens.get(0);
+        }
+        Token newtoken = new Token().setUserId(user.getId());
+        tokenDao.insert(newtoken);
+        return newtoken;
+}
 
 
     static boolean authenticate(User user, String password) throws Exception {
-        log.info("passwords: " + password + " vs " + credentials.get(user));
-        return password.equals(credentials.get(user));
+        List<User> oldUsers = userDao.getAllWhere("name = '" + user + "'");
+        log.info("passwords: " + password + " vs " + oldUsers.get(0).getPassword());
+        return password.equals(oldUsers.get(0).getPassword());
     }
 
 
