@@ -6,9 +6,7 @@ import model.dao.TokenDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -234,13 +232,22 @@ public class TokenContainer{
     }
 
     public static String writeUsersJson(){
-        String result = "";
+        /*String result = "";
         ArrayList<User> list = new ArrayList<>();
         for (Enumeration<User> e =tokens.keys(); e.hasMoreElements();){
              list.add(e.nextElement());
         }
         log.info(list.toString());
-        return list.toString();
+        return list.toString();*/
+        List<Token> oldTokens = tokenDao.getAll();
+        ArrayList<User> loggedUsers = new ArrayList<>();
+        for (Token element : oldTokens){
+            List<User> oldUsers = userDao.getAllWhere("id = '" + element.getUserId() + "'");
+            User temp = oldUsers.get(0);
+            loggedUsers.add(temp);
+        }
+        log.info(loggedUsers.toString());
+        return loggedUsers.toString();
     }
 
 }
