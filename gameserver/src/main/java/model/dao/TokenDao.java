@@ -38,4 +38,8 @@ public class TokenDao implements Dao<Token> {
     public void delete (Token token) {
         Database.delete(token);
     }
+
+    public void update(Token token){
+        Database.update(token);
+    }
 }
