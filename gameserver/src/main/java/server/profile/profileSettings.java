@@ -46,6 +46,18 @@ public class profileSettings {
         return Response.ok("User " + user + " was renamed to " + newName).build();
     }
 
-
+    @Authorized
+    @POST
+    @Path("password")
+    @Produces("text/plain")
+    public Response changePassword(@HeaderParam(HttpHeaders.AUTHORIZATION) String rawToken,
+                                @FormParam("password") String newPassword){
+        if (newPassword == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        String oldpass = TokenContainer.changePassword(new Token(rawToken),newPassword);
+        log.info("User changed password from'{}'  to '{}'", oldpass, newPassword);
+        return Response.ok("User changed password from " + oldpass +  " to " + newPassword).build();
+    }
 
 }

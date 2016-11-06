@@ -192,6 +192,16 @@ public class TokenContainer{
         }
     }
 
+    public static String changePassword(Token token,String newpassword){
+        List<Token> oldTokens = tokenDao.getAllWhere("token = '" + token.getToken() + "'");
+        Token temp = oldTokens.get(0);
+        List<User> oldUsers = userDao.getAllWhere("id = '" + temp.getUserId() + "'");
+        User tempuser = oldUsers.get(0);
+        String oldpass = tempuser.getPassword();
+        tempuser.setPassword(newpassword);
+        userDao.update(tempuser);
+        return oldpass;
+    }
     static String removeToken(Long token){
         /*User user = tokensReversed.remove(token);
         if (token.equals(tokens.remove(user))) {
