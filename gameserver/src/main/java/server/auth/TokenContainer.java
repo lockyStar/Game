@@ -153,7 +153,7 @@ public class TokenContainer{
     }
 
     public static String renameUser(Token token, String name ){
-        if (getUserByString(name) == null) {
+        /*if (getUserByString(name) == null) {
             User user = tokensReversed.remove(token);
             tokens.remove(user);
             Player player = players.remove(user);
@@ -171,10 +171,23 @@ public class TokenContainer{
             log.info("Chg: " + players.get(user));
             log.info("Chg: " + tokens.get(user));
             log.info("Chg: " + tokensReversed.get(tokens.get(user)));
-
             return previousName;
         }
         else {
+            return name;
+        }*/
+        List<User> tempusers = userDao.getAllWhere("name = '" + name + "'");
+        if (tempusers.size() == 0){
+            List<Token> oldTokens = tokenDao.getAllWhere("token = '" + token.getToken() + "'");
+            Token temp = oldTokens.get(0);
+            List<User> oldUsers = userDao.getAllWhere("id = '" + temp.getUserId() + "'");
+            User tempuser = oldUsers.get(0);
+            String oldname = tempuser.getName();
+            tempuser.setName(name);
+            userDao.update(tempuser);
+            return oldname;
+            }
+        else{
             return name;
         }
     }
