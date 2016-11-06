@@ -19,6 +19,7 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(unique = true)
     private Long token;
 
     @Embedded

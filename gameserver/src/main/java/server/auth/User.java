@@ -21,6 +21,7 @@ public class User {
     private int id;
 
     @NotNull
+    @Column(unique = true)
     private String name;
 
     @Embedded
