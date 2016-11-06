@@ -23,6 +23,7 @@ public class Token {
     private Long token;
 
     @Embedded
+    @Column(nullable = false)
     private Date date;
 
     @Column(nullable = false)

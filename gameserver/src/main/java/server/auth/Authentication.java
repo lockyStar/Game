@@ -74,7 +74,7 @@ public class Authentication {
             // Authenticate the user using the credentials provided
             User currentUser = getUserByString(user);
             log.info(currentUser.getName() + "not bad request");
-            if ((currentUser == null)||(!authenticate(new User(user), password))) {
+            if ((currentUser.getName() == null)||(!authenticate(currentUser,user, password))) {
                 log.info("Bad password");
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }

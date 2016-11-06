@@ -75,7 +75,8 @@ public class TokenContainer{
         if (oldUsers.size() == 1){
             return oldUsers.get(0);
         }
-        return null;
+        User tempUser = new User(null).setPassword(null);
+        return tempUser;
     }
     public static void logCred(){
         for (Enumeration<User> e = credentials.keys(); e.hasMoreElements();){
@@ -125,10 +126,11 @@ public class TokenContainer{
 }
 
 
-    static boolean authenticate(User user, String password) throws Exception {
-        List<User> oldUsers = userDao.getAllWhere("name = '" + user + "'");
-        log.info("passwords: " + password + " vs " + oldUsers.get(0).getPassword());
-        return password.equals(oldUsers.get(0).getPassword());
+    static boolean authenticate(User user,String nick , String password) throws Exception {
+        //List<User> oldUsers = userDao.getAllWhere("name = '" + user + "'");
+
+        log.info("passwords: " + password + " vs " + user.getPassword());
+        return (password.equals(user.getPassword())&&(nick.equals(user.getName())));
     }
 
 

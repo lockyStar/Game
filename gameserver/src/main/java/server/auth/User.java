@@ -20,19 +20,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    //@Embedded
+    @Embedded
     private Date date;
 
     @Column(nullable = false)
     private String password;
 
-    //@Column(nullable = true)
+    @Column(nullable = true)
     private String email;
 
-    //@Column(nullable = true)
+    @Column(nullable = true)
     private int tokenId;
 
     /**
