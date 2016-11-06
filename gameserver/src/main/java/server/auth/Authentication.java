@@ -101,13 +101,14 @@ public class Authentication {
     @Produces("text/plain")
     public Response deactivateUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String rawToken){
 
-
         //remove token-user pair from maps
-        String user = removeToken(new Token(rawToken));
+        rawToken = rawToken.substring("Bearer".length()).trim();
+        Long token = Long.parseLong(rawToken);
+        String user = removeToken(token);
 
-        log.info("User '{}' logged out", user);
+        log.info("User logged out");
 
-        return Response.ok("User " + user + " logged out successfully.").build();
+        return Response.ok("User logged out successfully.").build();
     }
 
 

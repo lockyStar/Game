@@ -138,10 +138,18 @@ public class TokenContainer{
 
     static void validateToken(Token token) throws Exception {
 
-        if (!tokensReversed.containsKey(token)) {
+        /*if (!tokensReversed.containsKey(token)) {
+            throw new Exception("Token validation exception");
+        }*/
+        log.info("Entered in validateToken");
+        List<Token> tokens = tokenDao.getAllWhere("token = '" + token.getToken() + "'");
+        log.info("List of tokens accepted with token " + token.getToken());
+        log.info("Size of list " + tokens.size());
+        if (tokens.size() == 0) {
+            log.info("I throwed exception");
             throw new Exception("Token validation exception");
         }
-        log.info("Correct token from '{}'", tokensReversed.get(token).getName());
+        log.info("Correct token");
     }
 
     public static String renameUser(Token token, String name ){
@@ -171,12 +179,22 @@ public class TokenContainer{
         }
     }
 
-    static String removeToken(Token token){
-        User user = tokensReversed.remove(token);
+    static String removeToken(Long token){
+        /*User user = tokensReversed.remove(token);
         if (token.equals(tokens.remove(user))) {
             return user.getName();
         }
-        return ("Bad try");
+        return ("Bad try");*/
+        List<Token> oldTokens = tokenDao.getAllWhere("token = '" + token + "'");
+        if (oldTokens.size() == 1){
+            Token newtoken = oldTokens.get(0);
+            tokenDao.delete(newtoken);
+            return "Token deleted";
+        }
+        else{
+            return "Logout failed";
+        }
+
     }
 
     public static String writeUsersJson(){

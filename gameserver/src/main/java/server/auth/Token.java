@@ -56,6 +56,7 @@ public class Token {
     public Token(String rawToken){
         rawToken = rawToken.substring("Bearer".length()).trim();
         token = Long.parseLong(rawToken);
+
     }
 
     @Override
