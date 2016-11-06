@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static server.auth.TokenContainer.getUserByString;
 
 /**
  * Created by Alex on 06.11.2016.
@@ -20,7 +21,7 @@ public class DaoTest {
     private User lolita;
 
     {
-        lolita = new User("lolita")
+        lolita = new User("lolittta")
                     .setPassword("temp");
         lolitaToken = new Token().setUserId(1);
     }
@@ -41,6 +42,17 @@ public class DaoTest {
         userDao.insert(lolita);
         assertEquals(before + 1, userDao.getAll().size());
     }
+
+
+
+    @Test
+    public void deleteUserTest() throws Exception {
+        int before = userDao.getAll().size();
+        User lolita2 = getUserByString(lolita.getName());
+        userDao.delete(lolita2);
+        assertEquals(before - 1, userDao.getAll().size());
+    }
+
 
     @Test
     public void getAllTokensTest() throws Exception {

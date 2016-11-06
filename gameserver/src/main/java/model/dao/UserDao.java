@@ -3,6 +3,8 @@ package model.dao;
 import jersey.repackaged.com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import server.auth.User;
 
 import java.util.Arrays;
@@ -33,6 +35,10 @@ public class UserDao implements Dao<User> {
     @Override
     public void insert(User user) {
         Database.doTransactional(session -> session.save(user));
+    }
+
+    public void delete (User user) {
+        Database.delete(user);
     }
 
 }

@@ -78,6 +78,8 @@ public class TokenContainer{
         User tempUser = new User(null).setPassword(null);
         return tempUser;
     }
+
+
     public static void logCred(){
         for (Enumeration<User> e = credentials.keys(); e.hasMoreElements();){
             log.info("checking " + e.nextElement().getName());
