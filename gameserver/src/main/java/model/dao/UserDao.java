@@ -26,6 +26,10 @@ public class UserDao implements Dao<User> {
         return Database.selectTransactional(session ->session.createQuery("from User where " + totalCondition).list());
     }
 
+    /***
+     *
+     * @param user
+     */
     @Override
     public void insert(User user) {
         Database.doTransactional(session -> session.save(user));

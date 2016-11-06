@@ -47,11 +47,12 @@ public class TokenContainer{
         players.put(user, new Player(user.getName()));
 
         return false;
-         */
+
         List<User> oldUsers = userDao.getAllWhere("name = '" + user.getName() + "'");
         if (oldUsers == null) {
             return false;
         }
+         */
         userDao.insert(user);
         return true;
     }

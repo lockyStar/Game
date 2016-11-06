@@ -15,7 +15,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class User {
     //@NotNull
     //private static final Logger log = LogManager.getLogger(User.class);
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -27,7 +26,7 @@ public class User {
     @Embedded
     private Date date;
 
-    @NotNull
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = true)
