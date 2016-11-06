@@ -48,7 +48,7 @@ public class TokenContainer{
 
         return false;
          */
-        List<User> oldUsers = userDao.getAllWhere("name = " + user.getName());
+        List<User> oldUsers = userDao.getAllWhere("name = '" + user.getName() + "'");
         if (oldUsers == null) {
             return false;
         }
