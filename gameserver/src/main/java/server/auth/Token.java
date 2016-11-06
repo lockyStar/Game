@@ -37,12 +37,14 @@ public class Token {
         this.token = token;
     }
 
-    public void setDate (Date date){
+    public Token setDate (Date date){
         this.date = date;
+        return this;
     }
 
-    public void setUserId(int id){
+    public Token setUserId(int id){
         this.userId = id;
+        return this;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package server.auth;
 
 import model.Player;
+import model.dao.UserDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -34,8 +36,10 @@ public class TokenContainer{
         players.put(admin, playerAdmin);
     }
 
-    public static boolean addUser(User user, String password) {
-        if (credentials.putIfAbsent(user, password) != null) {
+    private static UserDao userDao = new UserDao();
+
+    public static boolean addUser(User user) {
+        /**if (credentials.putIfAbsent(user, password) != null) {
             log.info(user.toString() + "not adding user");
             return true;
         }
@@ -43,6 +47,13 @@ public class TokenContainer{
         players.put(user, new Player(user.getName()));
 
         return false;
+         */
+        List<User> oldUsers = userDao.getAllWhere("name = " + user.getName());
+        if (oldUsers == null) {
+            return false;
+        }
+        userDao.insert(user);
+        return true;
     }
 
     public static User getUserByString (String nick){

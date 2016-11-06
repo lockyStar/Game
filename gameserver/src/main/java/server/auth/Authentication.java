@@ -39,7 +39,10 @@ public class Authentication {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        if (TokenContainer.addUser(new User(user), password)) {
+        User newUser = new User(user)
+                .setPassword(password);
+
+        if (TokenContainer.addUser(newUser)) {
 
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }

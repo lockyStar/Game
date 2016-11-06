@@ -27,6 +27,7 @@ public class User {
     @Embedded
     private Date date;
 
+    @NotNull
     private String password;
 
     @Column(nullable = true)
@@ -51,11 +52,11 @@ public class User {
         name = newName;
     }
 
-    public void setPassword(String newPassword) { this.password = newPassword; }
+    public User setPassword(@NotNull String newPassword) { this.password = newPassword; return this; }
 
-    public void setEmail(String newEmail) { this.email = newEmail; }
+    public User setEmail(String newEmail) { this.email = newEmail; return this; }
 
-    public void setTokenId (int newTokenId) { this.tokenId = newTokenId; }
+    public User setTokenId (int newTokenId) { this.tokenId = newTokenId; return this; }
 
     public int getId () { return this.id; }
 
