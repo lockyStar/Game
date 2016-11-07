@@ -131,7 +131,7 @@ public class TokenContainer{
         List<Score> scores = scoreDao.getAllWhere("username = '" + user.getName() + "'");
         Score score = scores.get(0);
         score.setScore(score.getScore() + 2);
-        scoreDao.update(score);
+        scoreDao.updateScore(score);
         return newtoken;
 }
 

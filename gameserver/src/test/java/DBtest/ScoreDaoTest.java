@@ -24,15 +24,6 @@ public class ScoreDaoTest {
         scoreDao.insert(tempScore);
         assertEquals(before + 1, scoreDao.getAll().size());
     }
-    @Test
-    public void updateTest() throws Exception{
-        Score tempScore2 = new Score("Kappa",3000);
-        //List<Score> oldscores = scoreDao.getAllWhere("userid = 4");
-        scoreDao.update(tempScore2);
-        //List<Score> newscores = scoreDao.getAllWhere("userid = 4");
-        //int newscore = newscores.get(0).getScore();
-        //assertEquals(newscore,3000);
-    }
 
     @Test
     public void existenceTest() throws Exception{

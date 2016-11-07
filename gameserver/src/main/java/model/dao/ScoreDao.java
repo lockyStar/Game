@@ -33,18 +33,21 @@ public class ScoreDao implements Dao<Score>{
             "SELECT TOP %d * FROM scores where ";
 
     private static final String INSERT_SCORE_TEMPLATE =
-            "INSERT INTO scores (score, username) VALUES ( %d, %s);";
+            "INSERT INTO scores (score, userName) VALUES ( %d, '%s');";
 
     private static final String CREATE_SCORE =
             "CREATE TABLE IF NOT EXISTS scores\n" +
                     "  (\n" +
                     "      id       SERIAL PRIMARY KEY NOT NULL,\n" +
                     "      score    INTEGER            NOT NULL,\n" +
-                    "      username VARCHAR            NOT NULL\n" +
+                    "      userName VARCHAR            NOT NULL\n" +
                     "  );\n";
 
     private static final String UPDATE_SCORE_TEMPLATE =
-            "UPDATE scores SET score=%d WHERE username=%s;";
+            "UPDATE scores SET score=%d WHERE userName='%s';";
+
+    private static final String UPDATE_NAME_TEMPLATE =
+            "UPDATE scores SET userName='%s' WHERE userName='%s';";
 
 
     @Override
@@ -132,24 +135,38 @@ public class ScoreDao implements Dao<Score>{
 
     @Override
     public void insert(Score score) {
-
+        checkExistance();
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
+            String Temp = String.format(INSERT_SCORE_TEMPLATE, score.getScore(), score.getUsername());
             stm.executeUpdate(String.format(INSERT_SCORE_TEMPLATE, score.getScore(), score.getUsername()));
         } catch (SQLException e) {
             log.error("Failed to add score {}", score, e);
-            checkExistance();
-        } catch (Exception e){
-            checkExistance();
         }
 
     }
 
-    public void update(Score score) {
+    public void updateScore(Score score) {
 
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
             stm.executeUpdate(String.format(UPDATE_SCORE_TEMPLATE, score.getScore(), score.getUsername()));
+        } catch (SQLException e) {
+            log.error("Failed to add score {}", score, e);
+            checkExistance();
+            this.insert(score);
+        } catch (Exception e){
+            checkExistance();
+            this.insert(score);
+        }
+
+    }
+
+    public void updateName(Score score, String newName) {
+
+        try (Connection con = DbConnector.getConnection();
+             Statement stm = con.createStatement()) {
+            stm.executeUpdate(String.format(UPDATE_NAME_TEMPLATE, newName, score.getUsername()));
         } catch (SQLException e) {
             log.error("Failed to add score {}", score, e);
             checkExistance();
@@ -182,8 +199,8 @@ public class ScoreDao implements Dao<Score>{
     }
 
     private static Score mapToScore(ResultSet rs) throws SQLException {
-        return new Score(rs.getString("username"),rs.getInt("score"));
-                //.setUsername(rs.getInt("userId"))
-                //.setScore(rs.getLong("score"));
+        return new Score()
+                .setUsername(rs.getString("userName"))
+                .setScore(rs.getInt("score"));
     }
 }

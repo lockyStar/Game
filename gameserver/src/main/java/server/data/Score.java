@@ -17,23 +17,30 @@ public class Score {
     //@Column(unique = false)
     private int score;
     //@Column(nullable = false)
-    private String username;
+    private String userName;
+
     public Score (String username, int score){
-        this.username = username;
+        this.userName = username;
         this.score = score;
     }
+
+    public Score(){
+        this.score = 0;
+    }
+
     public Score setUsername(String username){
-        this.username = username;
+        this.userName = username;
         return this;
     }
 
     public Score setScore(int score){
         this.score = score;
+
         return this;
     }
 
     public String getUsername(){
-        return this.username;
+        return this.userName;
     }
 
     //public int getId(){
@@ -46,6 +53,6 @@ public class Score {
 
     @Override
     public String toString() {
-        return this.score + " " + this.username;
+        return this.score + " " + this.userName;
     }
 }

@@ -2,7 +2,7 @@
 
   CREATE TABLE IF NOT EXISTS scores
   (
-      id     SERIAL PRIMARY KEY NOT NULL,
-      score  INTEGER            NOT NULL,
-      userid INTEGER            NOT NULL
+      id        SERIAL PRIMARY KEY NOT NULL,
+      score     INTEGER            NOT NULL,
+      userName  VARCHAR            NOT NULL
   );
