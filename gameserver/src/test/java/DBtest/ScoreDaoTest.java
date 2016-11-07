@@ -29,6 +29,19 @@ public class ScoreDaoTest {
     }
 
     @Test
+    public void getAllTest() throws Exception{
+        System.out.println(scoreDao.getAll());
+    }
+
+
+    @Test
+    public void getNTest() throws Exception{
+        int N = 1;
+        log.info(scoreDao.getN(1));
+        assertEquals(N, scoreDao.getN(N).size());
+    }
+
+    @Test
     public void writeJSONTest() throws Exception{
         ArrayList<Score> toJSON = new ArrayList<>();
         toJSON.add(tempScore);
