@@ -218,7 +218,7 @@ public class TokenContainer{
 
     public static ArrayList<Score> getScoreList(int N) {
         log.info("Entered to write top json ");
-        List<Score> scores = scoreDao.getAll();
+        List<Score> scores = scoreDao.getN(N);
         log.info("Size of scores list {} ", scores.size());
         return new ArrayList<>(scores);
     }
