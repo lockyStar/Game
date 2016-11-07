@@ -7,6 +7,9 @@ import org.junit.Test;
 import server.auth.Authentication;
 import server.data.Score;
 
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -23,6 +26,15 @@ public class ScoreDaoTest {
         log.info("temp score " + tempScore.getUsername()+ " " +tempScore.getScore());
         scoreDao.insert(tempScore);
         assertEquals(before + 1, scoreDao.getAll().size());
+    }
+
+    @Test
+    public void writeJSONTest() throws Exception{
+        ArrayList<Score> toJSON = new ArrayList<>();
+        toJSON.add(tempScore);
+        toJSON.add(new Score().setUsername("lolo").setScore(14));
+        toJSON.add(new Score().setUsername("arata").setScore(11));
+        assertArrayEquals(toJSON.toArray() ,Score.parseJSON(Score.writeJSON(toJSON)).toArray());
     }
 
     @Test
