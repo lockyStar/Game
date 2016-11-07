@@ -24,8 +24,17 @@ public class ScoreDao implements Dao<Score>{
     private static final String SELECT_ALL_SCORES =
             "SELECT * FROM scores";
 
+    private static final String SELECT_N_SCORES =
+            "SELECT TOP %d * FROM scores";
+
+    private static final String ORDER_BY_DESC =
+            " ORDER BY score DESC";
+
     private static final String SELECT_ALL_SCORES_WHERE =
             "SELECT * FROM scores where ";
+
+    private static final String SELECT_N_SCORES_WHERE =
+            "SELECT TOP %d * FROM scores where ";
 
     private static final String INSERT_SCORE_TEMPLATE =
             "INSERT INTO scores (score, userId) VALUES ( %d, %d);";
@@ -47,7 +56,26 @@ public class ScoreDao implements Dao<Score>{
         List<Score> scores = new ArrayList<>();
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
-            ResultSet rs = stm.executeQuery(SELECT_ALL_SCORES);
+            ResultSet rs = stm.executeQuery(SELECT_ALL_SCORES + ORDER_BY_DESC);
+            while (rs.next()) {
+                scores.add(mapToScore(rs));
+            }
+        } catch (SQLException e) {
+            log.error("Failed to getAll.", e);
+            return Collections.emptyList();
+        } catch (Exception e){
+            checkExistance();
+            return Collections.emptyList();
+        }
+        return scores;
+    }
+
+
+    public List<Score> getN(int N) {
+        List<Score> scores = new ArrayList<>();
+        try (Connection con = DbConnector.getConnection();
+             Statement stm = con.createStatement()) {
+            ResultSet rs = stm.executeQuery(String.format(SELECT_N_SCORES + ORDER_BY_DESC,N));
             while (rs.next()) {
                 scores.add(mapToScore(rs));
             }
@@ -68,7 +96,7 @@ public class ScoreDao implements Dao<Score>{
         List<Score> scores = new ArrayList<>();
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
-            ResultSet rs = stm.executeQuery(SELECT_ALL_SCORES_WHERE + totalCondition);
+            ResultSet rs = stm.executeQuery(SELECT_ALL_SCORES_WHERE + totalCondition + ORDER_BY_DESC);
             while (rs.next()) {
                 scores.add(mapToScore(rs));
             }
@@ -83,6 +111,28 @@ public class ScoreDao implements Dao<Score>{
 
         return scores;
     }
+
+    public List<Score> getNWhere(int N, String ... conditions) {
+        String totalCondition = Joiner.on(" and ").join(Arrays.asList(conditions));
+        List<Score> scores = new ArrayList<>();
+        try (Connection con = DbConnector.getConnection();
+             Statement stm = con.createStatement()) {
+            ResultSet rs = stm.executeQuery(String.format(SELECT_ALL_SCORES_WHERE + totalCondition + ORDER_BY_DESC,N));
+            while (rs.next()) {
+                scores.add(mapToScore(rs));
+            }
+        } catch (SQLException e) {
+            log.error("Failed to getAll.", e);
+            return Collections.emptyList();
+        } catch (Exception e){
+
+            checkExistance();
+            return Collections.emptyList();
+        }
+
+        return scores;
+    }
+
 
     @Override
     public void insert(Score score) {
@@ -115,7 +165,9 @@ public class ScoreDao implements Dao<Score>{
 
     }
 
-
+    /**
+     * Creates table, if not exists
+     */
     public void checkExistance(){
         try (Connection con = DbConnector.getConnection();
             Statement stm = con.createStatement()) {
