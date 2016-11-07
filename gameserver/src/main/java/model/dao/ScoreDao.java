@@ -107,14 +107,16 @@ public class ScoreDao implements Dao<Score>{
         } catch (SQLException e) {
             log.error("Failed to add score {}", score, e);
             checkExistance();
+            this.insert(score);
         } catch (Exception e){
             checkExistance();
+            this.insert(score);
         }
 
     }
 
 
-    private void checkExistance(){
+    public void checkExistance(){
         try (Connection con = DbConnector.getConnection();
             Statement stm = con.createStatement()) {
             DatabaseMetaData dbm = con.getMetaData();
@@ -123,7 +125,7 @@ public class ScoreDao implements Dao<Score>{
             if (!tables.next()) {
                 stm.executeUpdate(query);
             }
-
+            log.info("Table is created");
         } catch (Exception e){
             log.error("Failed to create db", e);
         }

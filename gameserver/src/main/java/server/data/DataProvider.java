@@ -26,6 +26,7 @@ public class DataProvider {
     public Response getUsers(){
         log.info("List of online users was sent");
         return Response.ok("Logged Users: " + writeUsersJson()).build();
-
     }
+
+
 }

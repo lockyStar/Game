@@ -1,8 +1,10 @@
 package server.auth;
 
 import model.Player;
+import server.data.Score;
 import model.dao.UserDao;
 import model.dao.TokenDao;
+import model.dao.ScoreDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,6 +39,7 @@ public class TokenContainer{
 
     private static UserDao userDao = new UserDao();
     private static TokenDao tokenDao = new TokenDao();
+    private static ScoreDao scoreDao = new ScoreDao();
 
     public static boolean addUser(User user) {
         /*if (credentials.putIfAbsent(user, password) != null) {
@@ -53,6 +56,9 @@ public class TokenContainer{
         if (oldUsers.size() == 0) {
             log.info(" size of oldusers with this name {} is null", user.getName());
             userDao.insert(user);
+            List<User> users = userDao.getAllWhere("name = '" + user.getName() + "'");
+            Score score = new Score(users.get(0).getId(),0);
+            scoreDao.insert(score);
             return true;
         }
         return false;
@@ -122,6 +128,10 @@ public class TokenContainer{
         }
         Token newtoken = new Token().setUserId(user.getId());
         tokenDao.insert(newtoken);
+        List<Score> scores = scoreDao.getAllWhere("userid = '" + user.getId() + "'");
+        Score score = scores.get(0);
+        score.setScore(score.getScore() + 2);
+        scoreDao.update(score);
         return newtoken;
 }
 
