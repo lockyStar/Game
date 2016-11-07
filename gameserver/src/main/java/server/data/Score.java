@@ -16,42 +16,23 @@ import javax.persistence.Id;
 public class Score {
     private static final Logger log = LogManager.getLogger(Authentication.class);
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
-    @Column(unique = false)
-    private Long score;
-
-    @Column(nullable = false)
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    //private int id;
+    //@Column(unique = false)
+    private int score;
+    //@Column(nullable = false)
     private int userId;
-
-    /**
-     *
-     * @param id
-     * @return
-     */
-    public Score setId (int id){
-        this.id = id;
-        return this;
+    public Score (int userid,int score){
+        this.userId = userid;
+        this.score = score;
     }
-
-    /**
-     *
-     * @param id
-     * @return
-     */
     public Score setUserId(int id){
-        this.userId = userId;
+        this.userId = id;
         return this;
     }
 
-    /**
-     *
-     * @param score
-     * @return
-     */
-    public Score setScore(Long score){
+    public Score setScore(int score){
         this.score = score;
         return this;
     }
@@ -60,11 +41,11 @@ public class Score {
         return this.userId;
     }
 
-    public int getId(){
-        return this.id;
-    }
+    //public int getId(){
+    //    return this.id;
+    //}
 
-    public Long getScore(){
+    public int getScore(){
         return this.score;
     }
 }

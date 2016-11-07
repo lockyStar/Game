@@ -75,9 +75,8 @@ public class ScoreDao implements Dao<Score>{
     }
 
     private static Score mapToScore(ResultSet rs) throws SQLException {
-        return new Score()
-                .setId(rs.getInt("id"))
-                .setUserId(rs.getInt("userId"))
-                .setScore(rs.getLong("score"));
+        return new Score(rs.getInt("userId"),rs.getInt("score"));
+                //.setUserId(rs.getInt("userId"))
+                //.setScore(rs.getLong("score"));
     }
 }
