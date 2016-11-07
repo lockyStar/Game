@@ -20,17 +20,14 @@ public class ScoreDao implements Dao<Score>{
     private static final String SELECT_ALL_SCORES =
             "SELECT * FROM scores";
 
-    private static final String SELECT_N_SCORES =
-            "SELECT TOP %d * FROM scores";
-
     private static final String ORDER_BY_DESC =
             " ORDER BY score DESC";
 
+    private static final String LIMIT =
+            " LIMIT %d";
+
     private static final String SELECT_ALL_SCORES_WHERE =
             "SELECT * FROM scores where ";
-
-    private static final String SELECT_N_SCORES_WHERE =
-            "SELECT TOP %d * FROM scores where ";
 
     private static final String INSERT_SCORE_TEMPLATE =
             "INSERT INTO scores (score, userName) VALUES ( %d, '%s');";
@@ -74,7 +71,7 @@ public class ScoreDao implements Dao<Score>{
         List<Score> scores = new ArrayList<>();
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
-            ResultSet rs = stm.executeQuery(String.format(SELECT_N_SCORES + ORDER_BY_DESC,N));
+            ResultSet rs = stm.executeQuery(String.format(SELECT_ALL_SCORES + ORDER_BY_DESC + LIMIT,N));
             while (rs.next()) {
                 scores.add(mapToScore(rs));
             }
@@ -116,7 +113,7 @@ public class ScoreDao implements Dao<Score>{
         List<Score> scores = new ArrayList<>();
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
-            ResultSet rs = stm.executeQuery(String.format(SELECT_ALL_SCORES_WHERE + totalCondition + ORDER_BY_DESC,N));
+            ResultSet rs = stm.executeQuery(String.format(SELECT_ALL_SCORES_WHERE + totalCondition + ORDER_BY_DESC + LIMIT,N));
             while (rs.next()) {
                 scores.add(mapToScore(rs));
             }

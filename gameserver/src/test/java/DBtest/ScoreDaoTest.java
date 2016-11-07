@@ -36,8 +36,8 @@ public class ScoreDaoTest {
 
     @Test
     public void getNTest() throws Exception{
-        int N = 1;
-        log.info(scoreDao.getN(1));
+        int N = 2;
+        log.info(scoreDao.getN(N));
         assertEquals(N, scoreDao.getN(N).size());
     }
 
