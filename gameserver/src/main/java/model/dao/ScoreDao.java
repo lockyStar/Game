@@ -6,14 +6,14 @@ import org.apache.logging.log4j.Logger;
 import server.data.Score;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by Alex on 07.11.2016.
@@ -30,6 +30,18 @@ public class ScoreDao implements Dao<Score>{
     private static final String INSERT_SCORE_TEMPLATE =
             "INSERT INTO scores (score, userId) VALUES ( %d, %d);";
 
+    private static final String CREATE_SCORE =
+            "CREATE TABLE IF NOT EXISTS scores\n" +
+                    "  (\n" +
+                    "      id     SERIAL PRIMARY KEY NOT NULL,\n" +
+                    "      score  INTEGER            NOT NULL,\n" +
+                    "      userid INTEGER            NOT NULL\n" +
+                    "  );\n";
+
+    private static final String UPDATE_SCORE_TEMPLATE =
+            "UPDATE scores SET score=%d WHERE userId=%d;";
+
+
     @Override
     public List<Score> getAll() {
         List<Score> scores = new ArrayList<>();
@@ -41,6 +53,9 @@ public class ScoreDao implements Dao<Score>{
             }
         } catch (SQLException e) {
             log.error("Failed to getAll.", e);
+            return Collections.emptyList();
+        } catch (Exception e){
+            checkExistance();
             return Collections.emptyList();
         }
         return scores;
@@ -60,18 +75,60 @@ public class ScoreDao implements Dao<Score>{
         } catch (SQLException e) {
             log.error("Failed to getAll.", e);
             return Collections.emptyList();
+        } catch (Exception e){
+
+            checkExistance();
+            return Collections.emptyList();
         }
+
         return scores;
     }
 
     @Override
     public void insert(Score score) {
+
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
             stm.executeUpdate(String.format(INSERT_SCORE_TEMPLATE, score.getScore(), score.getUserId()));
         } catch (SQLException e) {
-            log.error("Failed to add like {}", score, e);
+            log.error("Failed to add score {}", score, e);
+            checkExistance();
+        } catch (Exception e){
+            checkExistance();
         }
+
+    }
+
+    public void update(Score score) {
+
+        try (Connection con = DbConnector.getConnection();
+             Statement stm = con.createStatement()) {
+            stm.executeUpdate(String.format(UPDATE_SCORE_TEMPLATE, score.getScore(), score.getUserId()));
+        } catch (SQLException e) {
+            log.error("Failed to add score {}", score, e);
+            checkExistance();
+        } catch (Exception e){
+            checkExistance();
+        }
+
+    }
+
+
+    private void checkExistance(){
+        try (Connection con = DbConnector.getConnection();
+            Statement stm = con.createStatement()) {
+            DatabaseMetaData dbm = con.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, "scores", null);
+            String query = new String(CREATE_SCORE);
+            if (!tables.next()) {
+                stm.executeUpdate(query);
+            }
+
+        } catch (Exception e){
+            log.error("Failed to create db", e);
+        }
+
+
     }
 
     private static Score mapToScore(ResultSet rs) throws SQLException {

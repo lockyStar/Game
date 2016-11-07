@@ -23,7 +23,7 @@ public class Score {
     private int score;
     //@Column(nullable = false)
     private int userId;
-    public Score (int userid,int score){
+    public Score (int userid, int score){
         this.userId = userid;
         this.score = score;
     }
