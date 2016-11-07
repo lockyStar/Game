@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-
+import model.dao.ScoreDao;
 import static server.auth.TokenContainer.writeUsersJson;
-
+import static server.auth.TokenContainer.writeTopNJson;
 
 @Path("/data")
 public class DataProvider {
@@ -28,5 +28,12 @@ public class DataProvider {
         return Response.ok("Logged Users: " + writeUsersJson()).build();
     }
 
+    @GET
+    @Produces("application/json")
+    @Path("leaderboard")
+    public Response getLeaderboard(@QueryParam("number") int num){
+        log.info("Top users : " + writeTopNJson(num));
+        return Response.ok(("Top users : " + writeTopNJson(num))).build();
+    }
 
 }

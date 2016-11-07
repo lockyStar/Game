@@ -4,11 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.auth.Authentication;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 /**
  * Created by Alex on 07.11.2016.
  */
@@ -22,13 +17,13 @@ public class Score {
     //@Column(unique = false)
     private int score;
     //@Column(nullable = false)
-    private int userId;
-    public Score (int userid, int score){
-        this.userId = userid;
+    private String username;
+    public Score (String username, int score){
+        this.username = username;
         this.score = score;
     }
-    public Score setUserId(int id){
-        this.userId = id;
+    public Score setUsername(String username){
+        this.username = username;
         return this;
     }
 
@@ -37,8 +32,8 @@ public class Score {
         return this;
     }
 
-    public int getUserId(){
-        return this.userId;
+    public String getUsername(){
+        return this.username;
     }
 
     //public int getId(){
@@ -47,5 +42,10 @@ public class Score {
 
     public int getScore(){
         return this.score;
+    }
+
+    @Override
+    public String toString() {
+        return this.score + " " + this.username;
     }
 }

@@ -4,16 +4,12 @@ import jersey.repackaged.com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.data.Score;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Created by Alex on 07.11.2016.
@@ -37,18 +33,18 @@ public class ScoreDao implements Dao<Score>{
             "SELECT TOP %d * FROM scores where ";
 
     private static final String INSERT_SCORE_TEMPLATE =
-            "INSERT INTO scores (score, userId) VALUES ( %d, %d);";
+            "INSERT INTO scores (score, username) VALUES ( %d, %s);";
 
     private static final String CREATE_SCORE =
             "CREATE TABLE IF NOT EXISTS scores\n" +
                     "  (\n" +
-                    "      id     SERIAL PRIMARY KEY NOT NULL,\n" +
-                    "      score  INTEGER            NOT NULL,\n" +
-                    "      userid INTEGER            NOT NULL\n" +
+                    "      id       SERIAL PRIMARY KEY NOT NULL,\n" +
+                    "      score    INTEGER            NOT NULL,\n" +
+                    "      username VARCHAR            NOT NULL\n" +
                     "  );\n";
 
     private static final String UPDATE_SCORE_TEMPLATE =
-            "UPDATE scores SET score=%d WHERE userId=%d;";
+            "UPDATE scores SET score=%d WHERE username=%s;";
 
 
     @Override
@@ -80,7 +76,7 @@ public class ScoreDao implements Dao<Score>{
                 scores.add(mapToScore(rs));
             }
         } catch (SQLException e) {
-            log.error("Failed to getAll.", e);
+            log.error("Failed to getAllN.", e);
             return Collections.emptyList();
         } catch (Exception e){
             checkExistance();
@@ -139,7 +135,7 @@ public class ScoreDao implements Dao<Score>{
 
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
-            stm.executeUpdate(String.format(INSERT_SCORE_TEMPLATE, score.getScore(), score.getUserId()));
+            stm.executeUpdate(String.format(INSERT_SCORE_TEMPLATE, score.getScore(), score.getUsername()));
         } catch (SQLException e) {
             log.error("Failed to add score {}", score, e);
             checkExistance();
@@ -153,7 +149,7 @@ public class ScoreDao implements Dao<Score>{
 
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
-            stm.executeUpdate(String.format(UPDATE_SCORE_TEMPLATE, score.getScore(), score.getUserId()));
+            stm.executeUpdate(String.format(UPDATE_SCORE_TEMPLATE, score.getScore(), score.getUsername()));
         } catch (SQLException e) {
             log.error("Failed to add score {}", score, e);
             checkExistance();
@@ -186,8 +182,8 @@ public class ScoreDao implements Dao<Score>{
     }
 
     private static Score mapToScore(ResultSet rs) throws SQLException {
-        return new Score(rs.getInt("userId"),rs.getInt("score"));
-                //.setUserId(rs.getInt("userId"))
+        return new Score(rs.getString("username"),rs.getInt("score"));
+                //.setUsername(rs.getInt("userId"))
                 //.setScore(rs.getLong("score"));
     }
 }

@@ -57,7 +57,7 @@ public class TokenContainer{
             log.info(" size of oldusers with this name {} is null", user.getName());
             userDao.insert(user);
             List<User> users = userDao.getAllWhere("name = '" + user.getName() + "'");
-            Score score = new Score(users.get(0).getId(),0);
+            Score score = new Score(users.get(0).getName(),0);
             scoreDao.insert(score);
             return true;
         }
@@ -128,7 +128,7 @@ public class TokenContainer{
         }
         Token newtoken = new Token().setUserId(user.getId());
         tokenDao.insert(newtoken);
-        List<Score> scores = scoreDao.getAllWhere("userid = '" + user.getId() + "'");
+        List<Score> scores = scoreDao.getAllWhere("username = '" + user.getName() + "'");
         Score score = scores.get(0);
         score.setScore(score.getScore() + 2);
         scoreDao.update(score);
@@ -260,5 +260,12 @@ public class TokenContainer{
         return loggedUsers.toString();
     }
 
+    public static String writeTopNJson(int N){
+        log.info("Entered to write top json ");
+        List<Score> scores = scoreDao.getAll();
+        log.info("Size of scores list {} ", scores.size());
+        ArrayList<Score> sc = new ArrayList<>(scores);
+        return sc.toString();
+    }
 }
 
