@@ -108,20 +108,6 @@ public class TokenContainer{
 
 
     static Token issueToken(User user) {
-        /*Token token = tokens.get(user);
-        log.info("issue token for " + user.getName());
-        if (token != null) {
-            return token;
-        }
-
-        do {
-            token = new Token();
-        } while (tokens.containsKey(token));
-
-        tokens.put(user, token);
-        tokensReversed.put(token, user);
-        return token;
-        */
         List<Token> oldTokens = tokenDao.getAllWhere("userId = '" + user.getId() + "'");
         if (oldTokens.size() == 1){
             return oldTokens.get(0);
@@ -161,29 +147,6 @@ public class TokenContainer{
     }
 
     public static String renameUser(Token token, String name ){
-        /*if (getUserByString(name) == null) {
-            User user = tokensReversed.remove(token);
-            tokens.remove(user);
-            Player player = players.remove(user);
-            String pass = credentials.remove(user);
-            String previousName = user.getName();
-            player.setName(name);
-            user.setName(name);
-            players.put(user, player);
-            credentials.put(user, pass);
-            tokensReversed.put(token, user);
-            tokens.put(user, token);
-            //players.put(name, players.remove(previousName));
-            log.info("Changing '{}' name to '{}' was successful", previousName, tokensReversed.get(token));
-            log.info("Chg: " + credentials.get(user));
-            log.info("Chg: " + players.get(user));
-            log.info("Chg: " + tokens.get(user));
-            log.info("Chg: " + tokensReversed.get(tokens.get(user)));
-            return previousName;
-        }
-        else {
-            return name;
-        }*/
         List<User> tempusers = userDao.getAllWhere("name = '" + name + "'");
         if (tempusers.size() == 0){
             List<Token> oldTokens = tokenDao.getAllWhere("token = '" + token.getToken() + "'");
@@ -193,6 +156,11 @@ public class TokenContainer{
             String oldname = tempuser.getName();
             tempuser.setName(name);
             userDao.update(tempuser);
+
+            List<Score> scores = scoreDao.getAllWhere("username = '" + oldname + "'");
+            log.info("Size of queried scores {}", scores.size());
+            Score score = scores.get(0);
+            scoreDao.updateName(score,name);
             return oldname;
             }
         else{
@@ -224,11 +192,6 @@ public class TokenContainer{
 
 
     static String removeToken(Long token){
-        /*User user = tokensReversed.remove(token);
-        if (token.equals(tokens.remove(user))) {
-            return user.getName();
-        }
-        return ("Bad try");*/
         List<Token> oldTokens = tokenDao.getAllWhere("token = '" + token + "'");
         if (oldTokens.size() == 1){
             Token newtoken = oldTokens.get(0);
@@ -242,13 +205,6 @@ public class TokenContainer{
     }
 
     public static String writeUsersJson(){
-        /*String result = "";
-        ArrayList<User> list = new ArrayList<>();
-        for (Enumeration<User> e =tokens.keys(); e.hasMoreElements();){
-             list.add(e.nextElement());
-        }
-        log.info(list.toString());
-        return list.toString();*/
         List<Token> oldTokens = tokenDao.getAll();
         ArrayList<User> loggedUsers = new ArrayList<>();
         for (Token element : oldTokens){
