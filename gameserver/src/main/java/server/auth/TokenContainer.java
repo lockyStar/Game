@@ -216,12 +216,11 @@ public class TokenContainer{
         return loggedUsers.toString();
     }
 
-    public static String writeTopNJson(int N){
+    public static ArrayList<Score> getScoreList(int N) {
         log.info("Entered to write top json ");
         List<Score> scores = scoreDao.getAll();
         log.info("Size of scores list {} ", scores.size());
-        ArrayList<Score> sc = new ArrayList<>(scores);
-        return sc.toString();
+        return new ArrayList<>(scores);
     }
 }
 

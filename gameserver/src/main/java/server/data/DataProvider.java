@@ -11,8 +11,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import model.dao.ScoreDao;
 import static server.auth.TokenContainer.writeUsersJson;
-import static server.auth.TokenContainer.writeTopNJson;
-
+import static server.auth.TokenContainer.getScoreList;
+import server.data.Score;
 @Path("/data")
 public class DataProvider {
     @NotNull
@@ -32,8 +32,8 @@ public class DataProvider {
     @Produces("application/json")
     @Path("leaderboard")
     public Response getLeaderboard(@QueryParam("number") int num){
-        log.info("Top users : " + writeTopNJson(num));
-        return Response.ok(("Top users : " + writeTopNJson(num))).build();
+        log.info("Top users : " + Score.writeJSON(getScoreList(num)));
+        return Response.ok(("Top users : " + Score.writeJSON(getScoreList(num)))).build();
     }
 
 }
