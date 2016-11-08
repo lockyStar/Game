@@ -9,10 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import model.dao.ScoreDao;
 import static server.auth.TokenContainer.writeUsersJson;
 import static server.auth.TokenContainer.getScoreList;
-import server.data.Score;
 @Path("/data")
 public class DataProvider {
     @NotNull

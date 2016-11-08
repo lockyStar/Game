@@ -23,7 +23,6 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    //@Embedded
     @Column(nullable = false)
     private Date date;
 
@@ -36,17 +35,9 @@ public class User {
     @Column(nullable = true)
     private int tokenId;
 
-    /**
-     * Create new User
-     *
-     * @param name        visible name
-     */
     public User(@NotNull String name) {
         this.name = name;
         this.date = new Date();
-       // if (log.isInfoEnabled()) {
-       //     log.info(toString() + " created");
-        //}
     }
 
     public void setName(String newName){

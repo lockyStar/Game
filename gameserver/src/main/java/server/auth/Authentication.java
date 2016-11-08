@@ -4,15 +4,11 @@ package server.auth;
  * Created by Alex on 16.10.2016.
  */
 
-import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 import javax.ws.rs.core.HttpHeaders;
 
 import static server.auth.TokenContainer.*;
@@ -33,25 +29,22 @@ public class Authentication {
     @Produces("text/plain")
     public Response register(@FormParam("user") String user,
                              @FormParam("password") String password) {
-
+        //Checking existence of username and password
         if (user == null || password == null) {
-
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-
+        //Creating new user with these name and password
         User newUser = new User(user)
                 .setPassword(password);
-
         log.info("New temp user created {} ", user);
+        //Checking acceptability of username
         if (!TokenContainer.addUser(newUser)) {
             log.info("Not Acceptable you ruined registration");
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
-
         log.info("New user '{}' registered", user);
         return Response.ok("User " + user + " registered.").build();
     }
-
 
 
     // curl -X POST
@@ -69,7 +62,6 @@ public class Authentication {
         if (user == null || password == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        //logCred();
         try {
             // Authenticate the user using the credentials provided
             User currentUser = getUserByString(user);
@@ -100,15 +92,16 @@ public class Authentication {
     @Path("logout")
     @Produces("text/plain")
     public Response deactivateUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String rawToken){
-
-        //remove token-user pair from maps
+        //remove token from table
         rawToken = rawToken.substring("Bearer".length()).trim();
         Long token = Long.parseLong(rawToken);
         String user = removeToken(token);
-
-        log.info("User logged out");
-
-        return Response.ok("User logged out successfully.").build();
+        if (user.equals("")){
+            log.info("User logging out failed");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        log.info("User " + user +  " logged out");
+        return Response.ok("User " + user + " logged out successfully.").build();
     }
 
 

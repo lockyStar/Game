@@ -9,55 +9,33 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Alex on 24.10.2016.
  */
 public class TokenContainer{
-    private static ConcurrentHashMap<User, String> credentials;
-    private static ConcurrentHashMap<User, Player> players;
-    private static ConcurrentHashMap<User , Token> tokens;
-    private static ConcurrentHashMap<Token, User> tokensReversed;
-
     private static final Logger log = LogManager.getLogger(Authentication.class);
 
     static {
-        credentials = new ConcurrentHashMap<>();
         Player playerAdmin = new Player("admin");
         User admin = new User("admin");
-        credentials.put(admin, "admin");
-        tokens = new ConcurrentHashMap<>();
         Token token = new  Token(1L);
-        tokens.put(admin, token);
-        tokensReversed = new ConcurrentHashMap<>();
-        tokensReversed.put(token, admin);
-        log.info(credentials.get(admin));
-        players = new ConcurrentHashMap<>();
-        players.put(admin, playerAdmin);
     }
 
     private static UserDao userDao = new UserDao();
     private static TokenDao tokenDao = new TokenDao();
     private static ScoreDao scoreDao = new ScoreDao();
 
+    //Adding new user to table
     public static boolean addUser(User user) {
-        /*if (credentials.putIfAbsent(user, password) != null) {
-            log.info(user.toString() + "not adding user");
-            return true;
-        }
-        log.info(user.toString() + "adding user");
-        players.put(user, new Player(user.getName()));
-
-        return false;
-        */
+        //Checking users with same name
         List<User> oldUsers = userDao.getAllWhere("name = '" + user.getName() + "'");
         log.info(" size of oldusers with this name is {} ", oldUsers.size());
         if (oldUsers.size() == 0) {
+            //if this username is unique then inserting new user row and score row with value = 0
             log.info(" size of oldusers with this name {} is null", user.getName());
             userDao.insert(user);
-            List<User> users = userDao.getAllWhere("name = '" + user.getName() + "'");
-            Score score = new Score(users.get(0).getName(),0);
+            Score score = new Score(user.getName(),0);
             scoreDao.insert(score);
             return true;
         }
@@ -65,53 +43,22 @@ public class TokenContainer{
     }
 
     public static User getUserByString (String nick){
-        /*User temp  = new User();
-        for (Enumeration<User> e = credentials.keys(); e.hasMoreElements();){
-            temp = e.nextElement();
-            if (temp.getName().equals(nick)){
-                //log.info("Match");
-                return temp;
-            }
-        }
-        return null;
-        */
+        //Searching user from table with this name
         List<User> oldUsers = userDao.getAllWhere("name = '" + nick + "'");
         if (oldUsers.size() == 1){
             return oldUsers.get(0);
         }
-        User tempUser = new User(null).setPassword(null);
-        return tempUser;
+        return new User(null).setPassword(null);
     }
 
-
-    public static void logCred(){
-        for (Enumeration<User> e = credentials.keys(); e.hasMoreElements();){
-            log.info("checking " + e.nextElement().getName());
-        }
-    }
-
-    public static String getUserNameByToken(String rawToken) {
-        return tokensReversed.get(new Token(rawToken)).getName();
-    }
-
-    public static String getUserNameByToken(Long token) {
-        return tokensReversed.get(new Token(token)).getName();
-    }
-
-    public static User getUserByToken(String rawToken) {
-        return tokensReversed.get(new Token(rawToken));
-    }
-
-    public static User getUserByToken(Long token) {
-        return tokensReversed.get(new Token(token));
-    }
-
-
+    //Creating token for logged user
     static Token issueToken(User user) {
         List<Token> oldTokens = tokenDao.getAllWhere("userId = '" + user.getId() + "'");
+        //Returning old token if user is already logged
         if (oldTokens.size() == 1){
             return oldTokens.get(0);
         }
+        //Inserting new token row in table and increasing score by 2
         Token newtoken = new Token().setUserId(user.getId());
         tokenDao.insert(newtoken);
         List<Score> scores = scoreDao.getAllWhere("username = '" + user.getName() + "'");
@@ -123,18 +70,14 @@ public class TokenContainer{
 
 
     static boolean authenticate(User user,String nick , String password) throws Exception {
-        //List<User> oldUsers = userDao.getAllWhere("name = '" + user + "'");
-
+        //Checking passwords and username
         log.info("passwords: " + password + " vs " + user.getPassword());
         return (password.equals(user.getPassword())&&(nick.equals(user.getName())));
     }
 
 
     static void validateToken(Token token) throws Exception {
-
-        /*if (!tokensReversed.containsKey(token)) {
-            throw new Exception("Token validation exception");
-        }*/
+        //Checking input token
         log.info("Entered in validateToken");
         List<Token> tokens = tokenDao.getAllWhere("token = '" + token.getToken() + "'");
         log.info("List of tokens accepted with token " + token.getToken());
@@ -146,6 +89,7 @@ public class TokenContainer{
         log.info("Correct token");
     }
 
+    //Changing name of user
     public static String renameUser(Token token, String name ){
         List<User> tempusers = userDao.getAllWhere("name = '" + name + "'");
         if (tempusers.size() == 0){
@@ -174,6 +118,7 @@ public class TokenContainer{
         List<User> oldUsers = userDao.getAllWhere("id = '" + temp.getUserId() + "'");
         User tempuser = oldUsers.get(0);
         String oldpass = tempuser.getPassword();
+
         tempuser.setPassword(newpassword);
         userDao.update(tempuser);
         return oldpass;
@@ -190,20 +135,23 @@ public class TokenContainer{
         return oldemail;
     }
 
-
+    //Removing token for logging out returning username or empty string
     static String removeToken(Long token){
         List<Token> oldTokens = tokenDao.getAllWhere("token = '" + token + "'");
+        String res = "";
         if (oldTokens.size() == 1){
             Token newtoken = oldTokens.get(0);
+            List<User> oldUsers = userDao.getAllWhere("id = '" + newtoken.getUserId() + "'");
             tokenDao.delete(newtoken);
-            return "Token deleted";
+            res = oldUsers.get(0).getName();
+            return res;
         }
         else{
-            return "Logout failed";
+            return res;
         }
 
     }
-
+    // Returning string with logged users
     public static String writeUsersJson(){
         List<Token> oldTokens = tokenDao.getAll();
         ArrayList<User> loggedUsers = new ArrayList<>();
@@ -216,6 +164,7 @@ public class TokenContainer{
         return loggedUsers.toString();
     }
 
+    //Returning top N users in scores board
     public static ArrayList<Score> getScoreList(int N) {
         log.info("Entered to write top json ");
         List<Score> scores = scoreDao.getN(N);

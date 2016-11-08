@@ -15,8 +15,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
-import static server.auth.TokenContainer.getUserByToken;
-import static server.auth.TokenContainer.renameUser;
 
 @Path("/profile")
 public class profileSettings {
@@ -38,7 +36,7 @@ public class profileSettings {
 
         String user = TokenContainer.renameUser(new Token(rawToken), newName);
         if (user.equals(newName)){
-            log.info("Cannot rename this user, " + newName + " has alredy registred");
+            log.info("Cannot rename this user, " + newName + " has already registered");
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
         log.info("User '{}' was renamed to '{}'", user, newName);
