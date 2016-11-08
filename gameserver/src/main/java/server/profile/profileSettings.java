@@ -33,7 +33,9 @@ public class profileSettings {
     @Produces("text/plain")
     public Response renameUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String rawToken,
                                    @FormParam("name") String newName){
-
+        if (newName == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         String user = TokenContainer.renameUser(new Token(rawToken), newName);
         if (user.equals(newName)){
             log.info("Cannot rename this user, " + newName + " has already registered");

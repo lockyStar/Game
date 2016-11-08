@@ -31,6 +31,10 @@ public class DataProvider {
     @Produces("application/json")
     @Path("leaderboard")
     public Response getLeaderboard(@QueryParam("number") int num){
+        if (num <= 0)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         log.info("Top users : " + Score.writeJSON(getScoreList(num)));
         return Response.ok(("Top users : " + Score.writeJSON(getScoreList(num)))).build();
     }
