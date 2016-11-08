@@ -42,9 +42,6 @@ public class User {
     @Column(nullable = true)
     private String email;
 
-    @Column(nullable = true)
-    private int tokenId;
-
     public User(@NotNull String name) {
         this.name = name;
         this.date = new Date();
@@ -58,8 +55,6 @@ public class User {
 
     public User setEmail(String newEmail) { this.email = newEmail; return this; }
 
-    public User setTokenId (int newTokenId) { this.tokenId = newTokenId; return this; }
-
     public int getId () { return this.id; }
 
     public String getName(){
@@ -71,8 +66,6 @@ public class User {
     public String getPassword() { return this.password; }
 
     public String getEmail() { return this.email; }
-
-    public int getTokenId() { return this.tokenId; }
 
     @Override
     public String toString() {

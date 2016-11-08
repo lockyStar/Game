@@ -6,12 +6,11 @@ package server.data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import server.auth.TokenContainer;
 import server.auth.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import static server.auth.TokenContainer.writeUsersJson;
+import static server.auth.TokenContainer.getUsersarraylist;
 import static server.auth.TokenContainer.getScoreList;
 @Path("/data")
 public class DataProvider {
@@ -25,7 +24,7 @@ public class DataProvider {
     @Path("users")
     public Response getUsers(){
         log.info("List of online users was sent");
-        return Response.ok("Logged Users: " + writeUsersJson()).build();
+        return Response.ok("Logged Users: " + User.writeJSON(getUsersarraylist())).build();
     }
 
     @GET

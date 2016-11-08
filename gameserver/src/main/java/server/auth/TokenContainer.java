@@ -152,7 +152,7 @@ public class TokenContainer{
 
     }
     // Returning string with logged users
-    public static String writeUsersJson(){
+    public static ArrayList<User> getUsersarraylist(){
         List<Token> oldTokens = tokenDao.getAll();
         ArrayList<User> loggedUsers = new ArrayList<>();
         for (Token element : oldTokens){
@@ -161,7 +161,7 @@ public class TokenContainer{
             loggedUsers.add(temp);
         }
         log.info(loggedUsers.toString());
-        return loggedUsers.toString();
+        return loggedUsers;
     }
 
     //Returning top N users in scores board
