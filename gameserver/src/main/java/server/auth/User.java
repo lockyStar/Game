@@ -1,10 +1,13 @@
 package server.auth;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
@@ -25,9 +28,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Expose
     @Column(nullable = false)
-    private String name;
+    private  String name;
 
+    @Expose
     @Column(nullable = false)
     private Date date;
 
@@ -74,7 +79,10 @@ public class User {
         return this.name + " " + this.date;
     }
 
-    private static Gson gson = new Gson();
+    private static Gson gson = new GsonBuilder()
+            .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
 
     public static String writeJSON(ArrayList<User> toConvert){
         return gson.toJson(toConvert);

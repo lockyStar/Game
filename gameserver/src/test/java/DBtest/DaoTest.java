@@ -2,12 +2,18 @@ package DBtest;
 
 import model.dao.TokenDao;
 import model.dao.UserDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import server.auth.Authentication;
 import server.auth.Token;
 import server.auth.User;
+import server.data.Score;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static server.auth.TokenContainer.getUserByString;
@@ -17,6 +23,7 @@ import static server.auth.TokenContainer.getUserByString;
  */
 public class DaoTest {
     private UserDao userDao = new UserDao();
+    private static final Logger log = LogManager.getLogger(Authentication.class);
 
     private User lolita;
 
@@ -41,6 +48,16 @@ public class DaoTest {
         int before = userDao.getAll().size();
         userDao.insert(lolita);
         assertEquals(before + 1, userDao.getAll().size());
+    }
+
+    @Test
+    public void writeJSONTest() throws Exception{
+        ArrayList<User> toJSON = new ArrayList<>();
+        toJSON.add(lolita);
+        toJSON.add(new User("lolo").setPassword("124135").setEmail("sdgsdgs@ga.com"));
+        toJSON.add(new User("lasasdasolo").setPassword("124asdads135").setEmail("sdgsdgasds@gadsa.com"));
+        log.info(User.writeJSON(toJSON));
+        assertArrayEquals(toJSON.toArray() ,User.parseJSON(User.writeJSON(toJSON)).toArray());
     }
 
 
