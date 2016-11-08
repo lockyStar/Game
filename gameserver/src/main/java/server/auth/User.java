@@ -5,8 +5,13 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import server.data.Score;
+
 /**
  * Created by Alex on 24.10.2016.
  */
@@ -67,6 +72,16 @@ public class User {
     @Override
     public String toString() {
         return this.name + " " + this.date;
+    }
+
+    private static Gson gson = new Gson();
+
+    public static String writeJSON(ArrayList<User> toConvert){
+        return gson.toJson(toConvert);
+    }
+
+    public static ArrayList<User> parseJSON(String rawJSON){
+        return gson.fromJson(rawJSON, new TypeToken<ArrayList<User>>(){}.getType());
     }
 
     @Override
