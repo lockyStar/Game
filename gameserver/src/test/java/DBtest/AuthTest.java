@@ -7,9 +7,10 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import server.auth.Authentication;
+import server.profile.profileSettings;
 import server.auth.Token;
 import server.auth.User;
-
+import server.auth.TokenContainer;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -62,6 +63,13 @@ public class AuthTest {
         }
 
     }
-
+    @Test
+    public void changeEmailTest(){
+        List<User> tempUsers = userDao.getAllWhere("name = 'LOL'");
+        List<Token> token = tokenDao.getAllWhere("userId = " + tempUsers.get(0).getId());
+        TokenContainer.changeEmail(token.get(0),"pashezik@yandex.ru");
+        List<User> newUsers = userDao.getAllWhere("email = 'pashezik@yandex.ru'");
+        assertEquals(1,newUsers.size());
+    }
 
 }
